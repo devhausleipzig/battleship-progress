@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   const playerGrid = document.getElementById("player-grid") as HTMLElement;
   const computerGrid = document.getElementById("computer-grid") as HTMLElement;
+  const rotateButton = document.getElementById("rotate") as HTMLElement;
 
   const gridChars = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"];
 
@@ -19,4 +20,16 @@ document.addEventListener("DOMContentLoaded", () => {
       computerGrid.appendChild(computerSquare);
     }
   }
+
+  function rotateShips() {
+    const ships = document.querySelector(".ships")?.children as HTMLCollection;
+    const shipsArray = Array.from(ships);
+
+    shipsArray.forEach((ship) => {
+      const shipSpecificClass = ship.className.split(" ")[1];
+      ship.classList.toggle(`${shipSpecificClass}-vertical`);
+    });
+  }
+
+  rotateButton.addEventListener("click", rotateShips);
 });

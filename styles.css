@@ -26,3 +26,65 @@
 .grid > div {
   border: 1px solid hsla(0, 0%, 100%, 0.2);
 }
+
+.ships {
+  display: flex;
+}
+
+.ship {
+  display: flex;
+  width: calc(4.6vmin * var(--width, 1));
+  height: calc(4.6vmin * var(--height, 1));
+  margin: 1vmin;
+}
+
+.ship > div {
+  width: 4.6vmin;
+  height: 4.6vmin;
+}
+
+.destroyer-container {
+  background-color: red;
+  --width: 2;
+}
+
+.destroyer-container-vertical {
+  --width: 1;
+  --height: 2;
+}
+
+.submarine-container {
+  background-color: blue;
+  --width: 3;
+}
+
+.cruiser-container {
+  background-color: green;
+  --width: 3;
+}
+
+.submarine-container-vertical,
+.cruiser-container-vertical {
+  --width: 1;
+  --height: 3;
+}
+
+.battleship-container {
+  background-color: yellow;
+  --width: 4;
+}
+
+.battleship-container-vertical {
+  --width: 1;
+  --height: 4;
+}
+
+.carrier-container {
+  background-color: grey;
+  --width: 5;
+}
+
+.carrier-container-vertical {
+  --width: 1;
+  --height: 4;
+}
