@@ -1,3 +1,4 @@
+// Define Types
 type ShipType =
   | "destroyer"
   | "submarine"
@@ -6,12 +7,14 @@ type ShipType =
   | "carrier";
 
 class Ship {
+  // Define Attributes
   type: ShipType;
   isHorizontal: boolean = true;
   length: number;
 
   constructor(type: ShipType) {
     this.type = type;
+    // Assign Length based on the type
     switch (this.type) {
       case "destroyer":
         this.length = 2;
@@ -31,17 +34,22 @@ class Ship {
 }
 
 class PlayerShip extends Ship {
+  // Define Attribute
   element: HTMLElement;
   constructor(type: ShipType) {
     super(type);
+    // Grab the element from the DOM based on the type
     this.element = document.querySelector(
       `.${this.type}-container`
     ) as HTMLElement;
   }
 
   rotate() {
+    // Flip isHorizontal boolean
     this.isHorizontal = this.isHorizontal ? false : true;
 
+    // e.g. this.element.className -> "ship destroyer-container"
+    // e.g. shipSpecificClass -> "destroyer-container"
     const shipSpecificClass = this.element.className.split(" ")[1];
     this.element.classList.toggle(`${shipSpecificClass}-vertical`);
   }
