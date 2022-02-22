@@ -31,5 +31,50 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  type ShipType =
+    | "destroyer"
+    | "submarine"
+    | "cruiser"
+    | "battleship"
+    | "carrier";
+  type Position = `${string}-${number}`;
+  type PossibleValue = "" | ShipType;
+  type Grid = Record<Position, PossibleValue>;
+
+  const playerGridState: Grid = {};
+  const computerGridState: Grid = {};
+
+  function createKeyValuePair(
+    grid: Grid,
+    position: Position,
+    value: PossibleValue
+  ) {
+    grid[position] = value;
+  }
+
+  function getValue(grid: Grid, position: Position) {
+    return grid[position];
+  }
+
+  for (let i = 0; i < gridChars.length; i++) {
+    for (let j = 1; j <= 10; j++) {
+      createKeyValuePair(playerGridState, `${gridChars[i]}-${j}`, "");
+      createKeyValuePair(computerGridState, `${gridChars[i]}-${j}`, "");
+    }
+  }
+
+  type Orientation = "horizontal" | "vertical";
+  type Ship = {
+    length: number;
+    type: ShipType;
+    orientation: Orientation;
+  };
+
+  const destroyer: Ship = {
+    length: 2,
+    type: "destroyer",
+    orientation: "horizontal",
+  };
+
   rotateButton.addEventListener("click", rotateShips);
 });
