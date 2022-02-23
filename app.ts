@@ -69,11 +69,32 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       console.log(shipSquares);
     } else {
-      // Determine how far the ship extends vertically (character)
-      // Return ship if position is invalid
+      for (let i = 0; i < ship.length; i++) {
+        // const charIndex = gridChars.indexOf(positionChar);
+        // const row = charIndex + 1 + i - shipPart;
+
+        // if (row > 10 || row < 1) {
+        //   console.log("invalid");
+        //   return;
+        // }
+        // console.log("valid");
+        const charIndex = gridChars.indexOf(positionChar);
+        const char = gridChars[charIndex + i - shipPart];
+        if (!char) {
+          return;
+        }
+        shipSquares.push(`${char}-${positionNumber}`);
+      }
     }
 
-    // Set the positions in our state
-    // Draw ship onto grid
+    const isTaken: boolean = shipSquares.some((square) =>
+      playerGrid.get(square)
+    );
+
+    if (!isTaken) {
+      shipSquares.forEach((square) => playerGrid.set(square, ship.type));
+      // drawShip
+      ship.element.remove();
+    }
   }
 });

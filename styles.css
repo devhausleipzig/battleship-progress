@@ -37,6 +37,7 @@
 
 .ship {
   display: flex;
+  flex-wrap: wrap;
   width: calc(4.6vmin * var(--width, 1));
   height: calc(4.6vmin * var(--height, 1));
   margin: 1vmin;
