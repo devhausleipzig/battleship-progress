@@ -19,16 +19,16 @@ document.addEventListener("DOMContentLoaded", () => {
     shipsArray.forEach((ship) => ship.rotate())
   );
 
-  let selectedShipPart;
-  let selectedShip;
+  let selectedShipPart: number;
+  let selectedShip: PlayerShip;
 
   shipsArray.forEach((ship) => {
     ship.element.addEventListener("mousedown", (event) => {
-      selectedShipPart = event.target;
+      const target = event.target as HTMLElement;
+      selectedShipPart = parseInt(target.id.split("-")[1]);
     });
     ship.element.addEventListener("dragstart", () => {
-      console.log(ship.element);
-      selectedShip = ship.element;
+      selectedShip = ship;
     });
   });
 
@@ -46,6 +46,34 @@ document.addEventListener("DOMContentLoaded", () => {
   );
   playerGrid.element.addEventListener("drop", (event) => {
     const target = event.target as HTMLElement;
-    makePositionFromId(target.id);
+    const position = makePositionFromId(target.id);
+    placeShip(selectedShip, selectedShipPart, position);
   });
+
+  function placeShip(ship: PlayerShip, shipPart: number, position: Position) {
+    // Create a binding that holds all of the positions the ship takes
+    const shipSquares: Position[] = [];
+    const positionChar = position.split("-")[0];
+    const positionNumber = parseInt(position.split("-")[1]);
+
+    if (ship.isHorizontal) {
+      // Determine how far the ship extends horizontally (number)
+      for (let i = 0; i < ship.length; i++) {
+        const number = positionNumber + i - shipPart;
+        // if ship occupies a cell with a number greater than 10 or less than 1 -> invalid
+        if (number > 10 || number < 1) {
+          // Return ship if position is invalid
+          return;
+        }
+        shipSquares.push(`${positionChar}-${number}`);
+      }
+      console.log(shipSquares);
+    } else {
+      // Determine how far the ship extends vertically (character)
+      // Return ship if position is invalid
+    }
+
+    // Set the positions in our state
+    // Draw ship onto grid
+  }
 });

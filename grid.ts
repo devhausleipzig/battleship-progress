@@ -39,6 +39,7 @@ abstract class Grid {
       const square = document.createElement("div");
       // give it the position and the grid-type as id
       square.id = `${this.type}-${key}`;
+      square.innerHTML = key;
       this.element.appendChild(square);
       // hold a reference to each square on the instance
       this.squares.push(square);
