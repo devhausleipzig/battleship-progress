@@ -3,14 +3,16 @@ document.addEventListener("DOMContentLoaded", () => {
   // Grab the rotate button
   const rotateButton = document.getElementById("rotate") as HTMLElement;
 
+  // Instanciate out grids
+  const playerGrid = new Grid("player");
+  const computerGrid = new Grid("computer");
+
+  // create the grid cells
+  playerGrid.createBoard();
+  computerGrid.createBoard();
+
   // Create all five ships and put them into an array
-  const shipsArray = [
-    new PlayerShip("destroyer"),
-    new PlayerShip("submarine"),
-    new PlayerShip("cruiser"),
-    new PlayerShip("battleship"),
-    new PlayerShip("carrier"),
-  ];
+  const shipsArray = shipNames.map((shipName) => new PlayerShip(shipName));
 
   // when rotate button is clicked rotate every ship
   rotateButton.addEventListener("click", () =>
