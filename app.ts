@@ -4,8 +4,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const rotateButton = document.getElementById("rotate") as HTMLElement;
 
   // Instanciate out grids
-  const playerGrid = new Grid("player");
-  const computerGrid = new Grid("computer");
+  const playerGrid = new PlayerGrid();
+  const computerGrid = new ComputerGrid();
 
   // create the grid cells
   playerGrid.createBoard();

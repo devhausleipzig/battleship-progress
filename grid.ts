@@ -2,8 +2,8 @@ type Position = `${string}-${number}`;
 type PossibleValue = "" | ShipType;
 type GridState = Record<Position, PossibleValue>;
 
-class Grid {
-  state: GridState;
+abstract class Grid {
+  private state: GridState;
   type: "player" | "computer";
   ships: Ship[] = [];
   element: HTMLElement;
@@ -44,38 +44,32 @@ class Grid {
       this.squares.push(square);
     }
   }
+
+  // Get value at given key from our state
+  get(position: Position): PossibleValue {
+    return this.state[position];
+  }
+
+  // Update the state at give key
+  set(position: Position, value: PossibleValue): void {
+    this.state[position] = value;
+  }
+
+  // Check if the object has a truthy value at given key
+  has(position: Position): boolean {
+    const value = this.get(position);
+    return Boolean(value);
+  }
 }
 
-// const playerGrid = document.getElementById("player-grid") as HTMLElement;
-// const computerGrid = document.getElementById("computer-grid") as HTMLElement;
+class PlayerGrid extends Grid {
+  constructor() {
+    super("player");
+  }
+}
 
-// for (let i = 0; i < gridChars.length; i++) {
-//   for (let j = 1; j <= 10; j++) {
-//     const playerId = `player-${gridChars[i]}-${j}`;
-//     const computerId = `computer-${gridChars[i]}-${j}`;
-
-//     const playerSquare = document.createElement("div");
-//     playerSquare.id = playerId;
-
-//     const computerSquare = document.createElement("div");
-//     computerSquare.id = computerId;
-
-//     playerGrid.appendChild(playerSquare);
-//     computerGrid.appendChild(computerSquare);
-//   }
-// }
-
-// const playerGridState: Grid = {};
-// const computerGridState: Grid = {};
-
-// function createKeyValuePair(
-//   grid: Grid,
-//   position: Position,
-//   value: PossibleValue
-// ) {
-//   grid[position] = value;
-// }
-
-// function getValue(grid: Grid, position: Position) {
-//   return grid[position];
-// }
+class ComputerGrid extends Grid {
+  constructor() {
+    super("computer");
+  }
+}
