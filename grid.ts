@@ -3,7 +3,7 @@ type PossibleValue = "" | ShipType;
 type GridState = Record<Position, PossibleValue>;
 
 abstract class Grid {
-  private state: GridState;
+  protected state: GridState;
   type: "player" | "computer";
   ships: Ship[] = [];
   element: HTMLElement;

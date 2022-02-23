@@ -6,3 +6,8 @@ const shipNames: ShipType[] = [
   "battleship",
   "carrier",
 ];
+
+function makePositionFromId(id: string): Position {
+  const [char, number] = id.split("-").slice(1);
+  return `${char}-${parseInt(number)}`;
+}
