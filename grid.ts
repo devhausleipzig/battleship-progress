@@ -61,6 +61,10 @@ abstract class Grid {
     return Boolean(value);
   }
 
+  get positionArray(): Position[] {
+    return Object.keys(this.state) as Position[];
+  }
+
   drawShip(positions: Position[], shipType: ShipType): void {
     positions.forEach((position) => {
       const square = document.getElementById(`${this.type}-${position}`);
@@ -166,5 +170,7 @@ class PlayerGrid extends Grid {
 class ComputerGrid extends Grid {
   constructor() {
     super("computer");
+
+    shipNames.forEach((shipName) => this.ships.push(new Ship(shipName)));
   }
 }
