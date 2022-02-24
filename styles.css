@@ -91,5 +91,25 @@
 
 .carrier-container-vertical {
   --width: 1;
-  --height: 4;
+  --height: 5;
+}
+
+.destroyer {
+  background-color: red;
+}
+
+.submarine {
+  background-color: blue;
+}
+
+.cruiser {
+  background-color: green;
+}
+
+.battleship {
+  background-color: yellow;
+}
+
+.carrier {
+  background-color: grey;
 }
