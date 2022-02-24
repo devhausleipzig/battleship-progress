@@ -19,12 +19,15 @@ document.addEventListener("DOMContentLoaded", () => {
     shipsArray.forEach((ship) => ship.rotate())
   );
 
+  // the part of the ship we click on before we start dragging
   let selectedShipPart: number;
+  // the whole instance of a ship
   let selectedShip: PlayerShip;
 
   shipsArray.forEach((ship) => {
     ship.element.addEventListener("mousedown", (event) => {
       const target = event.target as HTMLElement;
+      // take e.g. destroyer-0 and assign the number after the "-" to selectedShipPart
       selectedShipPart = parseInt(target.id.split("-")[1]);
     });
     ship.element.addEventListener("dragstart", () => {
@@ -53,12 +56,15 @@ document.addEventListener("DOMContentLoaded", () => {
   function placeShip(ship: PlayerShip, shipPart: number, position: Position) {
     // Create a binding that holds all of the positions the ship takes
     const shipSquares: Position[] = [];
+    // "a-1" -> "a"
     const positionChar = position.split("-")[0];
+    // "a-1" -> 1
     const positionNumber = parseInt(position.split("-")[1]);
 
     if (ship.isHorizontal) {
       // Determine how far the ship extends horizontally (number)
       for (let i = 0; i < ship.length; i++) {
+        // calculate the position that each part of the ship would take
         const number = positionNumber + i - shipPart;
         // if ship occupies a cell with a number greater than 10 or less than 1 -> invalid
         if (number > 10 || number < 1) {
@@ -70,15 +76,8 @@ document.addEventListener("DOMContentLoaded", () => {
       console.log(shipSquares);
     } else {
       for (let i = 0; i < ship.length; i++) {
-        // const charIndex = gridChars.indexOf(positionChar);
-        // const row = charIndex + 1 + i - shipPart;
-
-        // if (row > 10 || row < 1) {
-        //   console.log("invalid");
-        //   return;
-        // }
-        // console.log("valid");
         const charIndex = gridChars.indexOf(positionChar);
+        // calculate the position that each part of the ship would take
         const char = gridChars[charIndex + i - shipPart];
         if (!char) {
           return;
