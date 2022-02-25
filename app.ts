@@ -2,6 +2,9 @@
 document.addEventListener("DOMContentLoaded", () => {
   // Grab the rotate button
   const rotateButton = document.getElementById("rotate") as HTMLElement;
+  const startButton = document.getElementById("start") as HTMLElement;
+  let playerTurn: number = 1;
+  let computerTurn: number = 1;
 
   // Instanciate out grids
   const playerGrid = new PlayerGrid();
@@ -18,77 +21,47 @@ document.addEventListener("DOMContentLoaded", () => {
 
   playerGrid.addListeners();
 
-  const positionArray = computerGrid.positionArray;
+  computerGrid.ships.forEach((ship) =>
+    computerGrid.generateShipPlacement(ship)
+  );
 
-  function getRadomElementFromArray<T>(array: T[]): T {
-    const randomIndex = Math.floor(Math.random() * array.length);
-    return array[randomIndex];
-  }
-
-  // const gridChars = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"];
-  // const gridNumber = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-  function calculateOffset<T>(
-    shipLength: number,
-    array: T[],
-    element: T
-  ): number {
-    let offset = 0;
-    const index = array.indexOf(element);
-    const endingPostion = index + shipLength;
-
-    if (endingPostion > array.length) {
-      offset = endingPostion - array.length;
-    }
-    return offset;
-  }
-
-  function makeRandomShipPosition(ship: Ship): Position[] {
-    const shipSquares: Position[] = [];
-    const randomStartingPosition = getRadomElementFromArray(positionArray);
-    const positionChar = randomStartingPosition[0];
-    const positionNumber = parseInt(randomStartingPosition[2]);
-
-    const randomIsHorizontal = Boolean(Math.round(Math.random()));
-    ship.isHorizontal = randomIsHorizontal;
-
-    if (ship.isHorizontal) {
-      for (let i = 0; i < ship.length; i++) {
-        const horizontalOffset = calculateOffset(
-          ship.length,
-          gridNumbers,
-          positionNumber
-        );
-        const number = positionNumber + i - horizontalOffset;
-        shipSquares.push(`${positionChar}-${number}`);
-      }
-    } else {
-      for (let i = 0; i < ship.length; i++) {
-        const verticalOffset = calculateOffset(
-          ship.length,
-          gridChars,
-          positionChar
-        );
-        const charIndex = gridChars.indexOf(positionChar);
-        const char = gridChars[charIndex + i - verticalOffset];
-        shipSquares.push(`${char}-${positionNumber}`);
-      }
-    }
-    return shipSquares;
-  }
-
-  function generateShipPlacement(ship: Ship): void {
-    let shipSquares: Position[] = makeRandomShipPosition(ship);
-    let isTaken: boolean = computerGrid.isTaken(shipSquares);
-
-    while (isTaken) {
-      shipSquares = makeRandomShipPosition(ship);
-      isTaken = computerGrid.isTaken(shipSquares);
+  startButton.addEventListener("click", () => {
+    if (playerGrid.shipsToBePlaced.length > 0) {
+      alert("You need to place all your ships to begin");
+      return;
     }
 
-    shipSquares.forEach((square) => computerGrid.set(square, ship.type));
+    computerGrid.element.addEventListener("click", fire);
+  });
 
-    computerGrid.drawShip(shipSquares, ship.type);
+  function fire(event: Event): void {
+    const target = event.target as HTMLElement;
+    const square = target;
+    const position = makePositionFromId(target.id);
+    const squareValue = computerGrid.get(position);
+
+    if (playerTurn !== computerTurn) {
+      return;
+    }
+
+    console.log(squareValue);
+
+    if (squareValue === "hit" || squareValue === "miss") {
+      alert("You already fired at that square pick another one");
+      return;
+    }
+
+    if (!playerGrid.ships.length || !computerGrid.ships.length) {
+      return;
+    }
+
+    computerGrid.takeShot(square);
+    playerTurn += 1;
+
+    setTimeout(() => {
+      const randomFire = playerGrid.randomFire();
+      playerGrid.takeShot(randomFire);
+      computerTurn += 1;
+    }, 500);
   }
-
-  computerGrid.ships.forEach((ship) => generateShipPlacement(ship));
 });

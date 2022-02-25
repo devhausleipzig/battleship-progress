@@ -28,7 +28,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  color: white;
 }
 
 .ships {
@@ -112,4 +111,22 @@
 
 .carrier {
   background-color: grey;
+}
+
+.boom:after,
+.miss::after {
+  content: "";
+  width: 2vmin;
+  height: 2vmin;
+  border-radius: 50%;
+}
+
+.boom::after {
+  background-color: red;
+  border-color: red;
+}
+
+.miss::after {
+  background-color: white;
+  border-color: white;
 }
