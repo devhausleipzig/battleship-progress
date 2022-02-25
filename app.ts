@@ -25,6 +25,23 @@ document.addEventListener("DOMContentLoaded", () => {
     return array[randomIndex];
   }
 
+  // const gridChars = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"];
+  // const gridNumber = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  function calculateOffset<T>(
+    shipLength: number,
+    array: T[],
+    element: T
+  ): number {
+    let offset = 0;
+    const index = array.indexOf(element);
+    const endingPostion = index + shipLength;
+
+    if (endingPostion > array.length) {
+      offset = endingPostion - array.length;
+    }
+    return offset;
+  }
+
   function makeRandomShipPosition(ship: Ship): Position[] {
     const shipSquares: Position[] = [];
     const randomStartingPosition = getRadomElementFromArray(positionArray);
@@ -36,13 +53,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (ship.isHorizontal) {
       for (let i = 0; i < ship.length; i++) {
-        const number = positionNumber + i - ship.length;
+        const horizontalOffset = calculateOffset(
+          ship.length,
+          gridNumbers,
+          positionNumber
+        );
+        const number = positionNumber + i - horizontalOffset;
         shipSquares.push(`${positionChar}-${number}`);
       }
     } else {
       for (let i = 0; i < ship.length; i++) {
+        const verticalOffset = calculateOffset(
+          ship.length,
+          gridChars,
+          positionChar
+        );
         const charIndex = gridChars.indexOf(positionChar);
-        const char = gridChars[charIndex + i - ship.length];
+        const char = gridChars[charIndex + i - verticalOffset];
         shipSquares.push(`${char}-${positionNumber}`);
       }
     }
