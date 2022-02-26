@@ -30,6 +30,8 @@ document.addEventListener("DOMContentLoaded", () => {
       alert("You need to place all your ships to begin");
       return;
     }
+    playerGrid.createPlayerAvatar();
+    computerGrid.createPlayerAvatar();
 
     computerGrid.element.addEventListener("click", fire);
   });

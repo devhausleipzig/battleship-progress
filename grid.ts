@@ -8,7 +8,7 @@ abstract class Grid {
   ships: Ship[] = [];
   element: HTMLElement;
   squares: HTMLElement[] = [];
-
+  lastShots: Position[] = [];
   constructor(type: "player" | "computer") {
     this.type = type;
 
@@ -42,6 +42,16 @@ abstract class Grid {
       // hold a reference to each square on the instance
       this.squares.push(square);
     }
+  }
+
+  createPlayerAvatar() {
+    const container = document.querySelector(".player-container");
+    const avatar = document.createElement("div");
+    avatar.classList.add("avatar");
+    avatar.style.backgroundImage = `url(assets/${this.type}.${
+      this.type === "player" ? "jpeg" : "png"
+    })`;
+    container?.appendChild(avatar);
   }
 
   // Get value at given key from our state
@@ -80,6 +90,8 @@ abstract class Grid {
   }
 
   takeShot(square: HTMLElement): void {
+    const hitSound = new Audio("assets/hit.wav");
+    const missSound = new Audio("assets/miss.wav");
     const currentPlayer = this.type === "computer" ? "player" : "computer";
     const position = makePositionFromId(square.id);
     const squareValue = this.get(position);
@@ -90,8 +102,10 @@ abstract class Grid {
       ) as Ship;
       hitShip.hit();
       square.classList.add("boom");
+      hitSound.play();
       console.log(position);
       this.set(position, "hit");
+      this.lastShots.push(position);
 
       if (hitShip.isSunken) {
         console.log(`${hitShip.type} is destroyed`);
@@ -105,6 +119,8 @@ abstract class Grid {
       }
     } else {
       square.classList.add("miss");
+      missSound.play();
+      this.lastShots = [];
       this.set(position, "miss");
     }
   }
@@ -203,17 +219,68 @@ class PlayerGrid extends Grid {
 
   randomFire(): HTMLElement {
     let sqaureValue: PossibleValue;
-    let randomPosition = getRadomElementFromArray(this.positionArray);
-    sqaureValue = this.get(randomPosition);
-
-    while (sqaureValue === "hit" || sqaureValue === "miss") {
-      randomPosition = getRadomElementFromArray(this.positionArray);
+    if (!this.lastShots.length) {
+      let randomPosition = getRadomElementFromArray(this.positionArray);
       sqaureValue = this.get(randomPosition);
+
+      while (sqaureValue === "hit" || sqaureValue === "miss") {
+        randomPosition = getRadomElementFromArray(this.positionArray);
+        sqaureValue = this.get(randomPosition);
+      }
+
+      return document.getElementById(
+        `${this.type}-${randomPosition}`
+      ) as HTMLElement;
+    } else {
+      let nextPosition = this.calculateNextSquare(
+        this.lastShots[this.lastShots.length - 1]
+      );
+      sqaureValue = this.get(nextPosition);
+      let counter = 0;
+      while (sqaureValue === "hit" || sqaureValue === "miss") {
+        nextPosition = getRadomElementFromArray(this.positionArray);
+        sqaureValue = this.get(nextPosition);
+        console.log(counter);
+        counter++;
+      }
+      return document.getElementById(
+        `${this.type}-${nextPosition}`
+      ) as HTMLElement;
+    }
+  }
+
+  calculateNextSquare(lastHit: Position): Position {
+    const positionChar = lastHit[0];
+    const positionNumber = parseInt(lastHit[2]);
+
+    type Direction = "up" | "down" | "left" | "right";
+    const directions: Direction[] = ["up", "down", "left", "right"];
+
+    let randomDirection = getRadomElementFromArray(directions);
+
+    if (positionChar === "a" && randomDirection === "up") {
+      randomDirection = "down";
+    }
+    if (positionChar === "j" && randomDirection === "down") {
+      randomDirection = "up";
+    }
+    if (positionNumber === 1 && randomDirection === "left") {
+      randomDirection = "right";
+    }
+    if (positionNumber === 10 && randomDirection === "right") {
+      randomDirection = "left";
     }
 
-    return document.getElementById(
-      `${this.type}-${randomPosition}`
-    ) as HTMLElement;
+    const action: Record<Direction, () => Position> = {
+      down: () =>
+        `${gridChars[gridChars.indexOf(positionChar) + 1]}-${positionNumber}`,
+      up: () =>
+        `${gridChars[gridChars.indexOf(positionChar) - 1]}-${positionNumber}`,
+      left: () => `${positionChar}-${positionNumber - 1}`,
+      right: () => `${positionChar}-${positionNumber + 1}`,
+    };
+
+    return action[randomDirection]();
   }
 }
 
